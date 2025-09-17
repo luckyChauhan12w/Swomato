@@ -1,15 +1,16 @@
-import React from "react";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
 import { Route, Routes } from "react-router-dom";
+import ForgetPassword from "./pages/ForgetPassword";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 export const serverUrl = "http://localhost:3000";
 
 const App = () => {
   return (
     <Routes>
-      <Route path="/signup" element={<SignUp />} />
-      <Route path="/signin" element={<SignIn />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/forget-password" element={<ForgetPassword />} />
     </Routes>
   );
 };

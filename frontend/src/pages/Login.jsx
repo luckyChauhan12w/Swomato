@@ -4,8 +4,9 @@ import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { serverUrl } from "../App";
+import { Link } from "react-router-dom";
 
-const SignIn = () => {
+const Login = () => {
   const {
     register,
     handleSubmit,
@@ -16,7 +17,7 @@ const SignIn = () => {
 
   const handelSignIn = async (data) => {
     try {
-      const res = await axios.post(`${serverUrl}/api/auth/signIn`, data, {
+      const res = await axios.post(`${serverUrl}/api/v1/auth/register`, data, {
         withCredentials: true,
       });
       console.log(res.data);
@@ -45,6 +46,7 @@ const SignIn = () => {
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          {/* Email */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">
               Email
@@ -67,6 +69,7 @@ const SignIn = () => {
             )}
           </div>
 
+          {/* Password */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">
               Password
@@ -98,6 +101,17 @@ const SignIn = () => {
             )}
           </div>
 
+          {/* Forgot Password link */}
+          <div className="text-right -mt-3">
+            <Link
+              to="/forget-password"
+              className="text-sm text-red-500 hover:underline"
+            >
+              Forgot Password?
+            </Link>
+          </div>
+
+          {/* Sign In button */}
           <button
             type="submit"
             className="w-full bg-red-500 text-white font-semibold py-2 rounded-lg 
@@ -126,7 +140,7 @@ const SignIn = () => {
         <p className="text-center text-gray-500 text-sm mt-6">
           Don’t have an account?{" "}
           <a
-            href="/signup"
+            href="/register"
             className="text-red-500 font-semibold hover:underline"
           >
             Sign Up
@@ -137,4 +151,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default Login;

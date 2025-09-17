@@ -3,9 +3,10 @@ import bcrypt from "bcryptjs";
 import genToken from "../utils/token.js";
 
 const signUp = async (req, res) => {
+
     try {
         const { fullName, email, password, mobile, role } = req.body;
-        console.log(req)
+
 
         const existUser = await User.findOne({
             $or: [{ email }, { mobile }]
@@ -47,6 +48,7 @@ const signUp = async (req, res) => {
             message: "User registered successfully!",
             user,
         });
+
     } catch (error) {
         return res.status(500).json({ message: "Internal error!" });
     }
@@ -55,7 +57,6 @@ const signUp = async (req, res) => {
 const signIn = async (req, res) => {
     try {
 
-        console.log(req)
         const { email, password } = req.body;
 
         const user = await User.findOne({ email });
@@ -96,4 +97,52 @@ const signOut = async (req, res) => {
     }
 };
 
-export { signUp, signIn, signOut };
+
+const googleAuth = async (req, res) => {
+    try {
+        const { fullName, email, password, mobile, role } = req.body;
+
+        const existUser = await User.findOne({
+            $or: [{ email }, { mobile }]
+        });
+
+        if (existUser) {
+            return res.status(422).json({
+                message: "User Already Exist!"
+            })
+        }
+
+        if (mobile.length < 10) {
+            return res.status(400).json({ message: "Your mobile is smaller than 10 digit" });
+        }
+
+        const user = await User.create({
+            fullName,
+            email,
+            mobile,
+            role,
+        });
+
+        const token = await genToken(user._id);
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
+
+        res.status(201).json({
+            message: "User registered successfully!",
+            user,
+        });
+
+    } catch (error) {
+        return res.status(500).json({ message: "Internal error!" });
+    }
+};
+
+
+
+export { signUp, signIn, signOut, googleAuth };

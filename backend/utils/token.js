@@ -7,7 +7,7 @@ const genToken = async (userId) => {
         }, process.env.JWT_SECRET, { expiresIn: "7d" })
         return Token
     } catch (error) {
-        console.log("Token Is not Seted to the User Browser!")
+        console.log(error)
     }
 }
 

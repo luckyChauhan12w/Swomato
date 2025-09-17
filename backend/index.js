@@ -18,10 +18,10 @@ app.use(cors({
 app.use(express.json())
 app.use(cookieParser())
 
-app.use('/api/auth', authRoutes)
+app.use('/api/v1/auth', authRoutes);
 
 app.listen(port, () => {
-    connectdb()
-    console.log(`server is started at ${port}`)
-})
+    connectdb();
+    console.log(`server is started at ${port}`);
+});
 
