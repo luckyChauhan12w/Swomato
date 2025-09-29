@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 // Enable CORS for your frontend origin
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: "https://swomato.netlify.app",
         credentials: true,
     })
 );
