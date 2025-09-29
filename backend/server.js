@@ -6,12 +6,19 @@ import connectDb from "./src/db/db.js";
 
 const server = http.createServer(app);
 
-const io = new Server(server, { /* your cors config */ });
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+        credentials: true,
+        methods: ['POST', 'GET']
+    }
+});
 app.set("io", io);
 
 socketHandler(io);
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT;
+
 server.listen(port, () => {
     connectDb();
     console.log(`Server running on port ${port}`);
