@@ -12,7 +12,7 @@ const app = express()
 
 // Middlewares
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://swomato-5vz4.onrender.com",
     credentials: true
 }))
 
