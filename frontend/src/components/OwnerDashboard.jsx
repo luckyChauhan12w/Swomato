@@ -24,7 +24,7 @@ function OwnerDashboard() {
       setError("Failed to load shop data. Please try again.");
       console.error("Error fetching owner data:", err);
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
