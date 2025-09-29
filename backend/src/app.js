@@ -10,11 +10,6 @@ import orderRouter from "./routes/order.routes.js";
 
 const app = express();
 
-// Add Cross-Origin-Opener-Policy header middleware (fix for popup window.closed issue)
-app.use((req, res, next) => {
-    res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
-    next();
-});
 
 // Enable CORS for your frontend origin
 app.use(
