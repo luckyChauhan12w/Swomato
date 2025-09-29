@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 // Enable CORS for your frontend origin
 app.use(
     cors({
-        origin: "https://swomato.netlify.app",
+        origin: "https://swomato12.onrender.com",
         credentials: true,
     })
 );

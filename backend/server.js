@@ -8,7 +8,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: "https://swomato.netlify.app",
+        origin: "https://swomato12.onrender.com",
         credentials: true,
         methods: ['POST', 'GET']
     }
