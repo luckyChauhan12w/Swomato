@@ -7,7 +7,11 @@ import userRouter from "./routes/user.routes.js"
 import itemRouter from "./routes/product.routes.js"
 import shopRouter from "./routes/shop.routes.js"
 import orderRouter from "./routes/order.routes.js"
-import path from "path"
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express()
 
@@ -17,10 +21,12 @@ app.use(cors({
     credentials: true
 }))
 
+// Serve static files from `src/public`
+app.use(express.static(path.join(__dirname, "public")));
 
-// SPA Fallback — serve index.html for all other routes
+// SPA fallback: serve index.html on unknown routes
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+    res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 app.use(express.json())
