@@ -12,7 +12,7 @@ const app = express()
 
 // Middlewares
 app.use(cors({
-    origin: "https://swomato-5vz4.onrender.com",
+    origin: "https://swomato-frontend.onrender.com",
     credentials: true
 }))
 
