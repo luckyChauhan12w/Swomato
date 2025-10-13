@@ -3,28 +3,28 @@ import React, { useEffect } from 'react'
 import { serverUrl } from '../App'
 import { useDispatch, useSelector } from 'react-redux'
 import { setMyOrders, setUserData } from '../redux/userSlice'
-import { setMyShopData } from '../redux/ownerSlice'
+
 
 function useGetMyOrders() {
-    const dispatch=useDispatch()
-    const {userData}=useSelector(state=>state.user)
-  useEffect(()=>{
-  const fetchOrders=async () => {
-    try {
-           const result=await axios.get(`${serverUrl}/api/order/my-orders`,{withCredentials:true})
-            dispatch(setMyOrders(result.data))
-   
+  const dispatch = useDispatch()
+  const { userData } = useSelector(state => state.user)
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const result = await axios.get(`${serverUrl}/api/order/my-orders`, { withCredentials: true })
+        dispatch(setMyOrders(result.data))
 
 
-    } catch (error) {
+
+      } catch (error) {
         console.log(error)
+      }
     }
-}
-  fetchOrders()
+    fetchOrders()
 
- 
-  
-  },[userData])
+
+
+  }, [userData])
 }
 
 export default useGetMyOrders
