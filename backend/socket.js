@@ -1,4 +1,4 @@
-import User from "./src/models/user.model.js"
+import User from "./models/user.model.js"
 
 export const socketHandler = (io) => {
   io.on('connection', (socket) => {
@@ -26,8 +26,8 @@ export const socketHandler = (io) => {
         })
 
         if (user) {
-          io.emit('updateDeliveryLocation', {
-            deliveryBoyId: userId,
+          io.emit('updateDeliveryLocation',{
+            deliveryBoyId:userId,
             latitude,
             longitude
           })
@@ -35,7 +35,7 @@ export const socketHandler = (io) => {
 
 
       } catch (error) {
-        console.log('updateDeliveryLocation error')
+          console.log('updateDeliveryLocation error')
       }
     })
 

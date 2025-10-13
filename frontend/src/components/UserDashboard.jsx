@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Nav from "./Nav";
 import { categories } from "../category";
 import CategoryCard from "./CategoryCard";
-import { FaCircleChevronLeft } from "react-icons/fa6";
-import { FaCircleChevronRight } from "react-icons/fa6";
+import { FaCircleChevronLeft, FaCircleChevronRight } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import FoodCard from "./FoodCard";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +13,7 @@ function UserDashboard() {
   );
   const cateScrollRef = useRef();
   const shopScrollRef = useRef();
+  const sectionRef = useRef();
   const navigate = useNavigate();
 
   const [showLeftCateButton, setShowLeftCateButton] = useState(false);
@@ -22,24 +22,20 @@ function UserDashboard() {
   const [showRightShopButton, setShowRightShopButton] = useState(false);
   const [updatedItemsList, setUpdatedItemsList] = useState([]);
 
-  const handleFilterByCategory = useCallback(
-    (category) => {
-      if (category === "All") {
-        setUpdatedItemsList(itemsInMyCity || []);
-      } else {
-        const filteredList =
-          itemsInMyCity?.filter((item) => item.category === category) || [];
-        setUpdatedItemsList(filteredList);
-      }
-    },
-    [itemsInMyCity]
-  );
+  const handleFilterByCategory = (category) => {
+    if (category === "All") {
+      setUpdatedItemsList(itemsInMyCity);
+    } else {
+      const filteredList = itemsInMyCity?.filter((i) => i.category === category);
+      setUpdatedItemsList(filteredList);
+    }
+  };
 
   useEffect(() => {
-    setUpdatedItemsList(itemsInMyCity || []);
+    setUpdatedItemsList(itemsInMyCity);
   }, [itemsInMyCity]);
 
-  const updateButton = useCallback((ref, setLeftButton, setRightButton) => {
+  const updateButton = (ref, setLeftButton, setRightButton) => {
     const element = ref.current;
     if (element) {
       setLeftButton(element.scrollLeft > 0);
@@ -47,77 +43,50 @@ function UserDashboard() {
         element.scrollLeft + element.clientWidth < element.scrollWidth
       );
     }
-  }, []);
+  };
 
-  const scrollHandler = useCallback((ref, direction) => {
+  const scrollHandler = (ref, direction) => {
     if (ref.current) {
       ref.current.scrollBy({
         left: direction === "left" ? -200 : 200,
         behavior: "smooth",
       });
     }
-  }, []);
+  };
 
   useEffect(() => {
-    const handleCateScroll = () => {
-      updateButton(
-        cateScrollRef,
-        setShowLeftCateButton,
-        setShowRightCateButton
-      );
-    };
+    if (cateScrollRef.current) {
+      updateButton(cateScrollRef, setShowLeftCateButton, setShowRightCateButton);
+      updateButton(shopScrollRef, setShowLeftShopButton, setShowRightShopButton);
 
-    const handleShopScroll = () => {
-      updateButton(
-        shopScrollRef,
-        setShowLeftShopButton,
-        setShowRightShopButton
-      );
-    };
+      const cateListener = () =>
+        updateButton(cateScrollRef, setShowLeftCateButton, setShowRightCateButton);
+      const shopListener = () =>
+        updateButton(shopScrollRef, setShowLeftShopButton, setShowRightShopButton);
 
-    if (cateScrollRef.current && shopScrollRef.current) {
-      // Initial button state update
-      updateButton(
-        cateScrollRef,
-        setShowLeftCateButton,
-        setShowRightCateButton
-      );
-      updateButton(
-        shopScrollRef,
-        setShowLeftShopButton,
-        setShowRightShopButton
-      );
+      cateScrollRef.current.addEventListener("scroll", cateListener);
+      shopScrollRef.current.addEventListener("scroll", shopListener);
 
-      // Add event listeners
-      cateScrollRef.current.addEventListener("scroll", handleCateScroll);
-      shopScrollRef.current.addEventListener("scroll", handleShopScroll);
+      return () => {
+        cateScrollRef?.current?.removeEventListener("scroll", cateListener);
+        shopScrollRef?.current?.removeEventListener("scroll", shopListener);
+      };
     }
+  }, [categories]);
 
-    // Cleanup function with proper references
-    return () => {
-      if (cateScrollRef.current) {
-        cateScrollRef.current.removeEventListener("scroll", handleCateScroll);
-      }
-      if (shopScrollRef.current) {
-        shopScrollRef.current.removeEventListener("scroll", handleShopScroll);
-      }
-    };
-  }, [updateButton]);
-
-  const sectionRef = useRef(null);
-
+  // Optional: Smooth scroll to menu section for "View Menu" button
   const scrollToSection = () => {
     sectionRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <div className="w-[100%] min-h-screen flex flex-col bg-[#ffffff] items-center  overflow-y-auto">
+    <div className="w-[100%] min-h-screen flex flex-col bg-[#ffffff] items-center overflow-y-auto">
       <Nav />
 
       <main className="w-[100%] px-8 flex p-2 flex-col">
         {/* Search Results Section */}
         {searchItems && searchItems.length > 0 && (
-          <section className=" rounded-3xl p-8">
+          <section className="rounded-3xl p-8">
             <header className="flex items-center justify-between mb-6 border-b border-orange-200 pb-3">
               <h1 className="text-orange-900 text-2xl sm:text-3xl font-bold flex items-center gap-2">
                 Search Results
@@ -165,7 +134,7 @@ function UserDashboard() {
           </div>
         </section>
 
-        {/* Categories + Shops (Side by Side on large screens) */}
+        {/* Categories + Shops */}
         <section>
           {/* Categories */}
           <div className="backdrop-blur-sm rounded-3xl py-8">
@@ -181,7 +150,7 @@ function UserDashboard() {
               )}
 
               <div
-                className="flex overflow-x-auto gap-4 pb-2  scrollbar-hide"
+                className="flex overflow-x-auto gap-4 pb-2 scrollbar-hide"
                 ref={cateScrollRef}
               >
                 {categories.map((cate, index) => (
@@ -248,20 +217,15 @@ function UserDashboard() {
         </section>
 
         {/* Suggested Food Items */}
-        <section
-          ref={sectionRef}
-          className=" rounded-3xl border-orange-100 py-8 mb-8"
-        >
+        <section ref={sectionRef} className="rounded-3xl border-orange-100 py-8 mb-8">
           <h1 className="text-orange-900 text-2xl sm:text-3xl font-bold mb-6">
             Suggested Food Items
           </h1>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {updatedItemsList?.map((item, index) => (
               <FoodCard key={`food-${item._id || index}`} data={item} />
             ))}
           </div>
-
           {updatedItemsList?.length === 0 && (
             <div className="w-full flex flex-col items-center justify-center py-12 text-orange-600">
               <div className="text-6xl mb-4">🍴</div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 function CategoryCard({ name, image, onClick }) {
   return (
@@ -22,4 +22,4 @@ function CategoryCard({ name, image, onClick }) {
   );
 }
 
-export default CategoryCard;
+export default CategoryCard
