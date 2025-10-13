@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon index.js"
   },
-  "author": "Virtual code",
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.2",
